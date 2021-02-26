@@ -18,15 +18,13 @@ public abstract class Ship {
 		
 	}
 	
-	abstract public void setCoordinates(int x, int y);
-	
-	public boolean isSunk() {
+	public void setCoordinates(int x, int y) {
 		
-		if(numHits == size) {
-			return true;
-		}
-		return false;
+		this.x = x;
+		this.y = y;
+		
 	}
+	
 	
 	public String toString() {
 		

@@ -16,6 +16,13 @@ public class Grid {
 	
 	
 	public static void main(String[] args) {
+		Grid g = new Grid();
+		g.placeShip(g.submarine, Direction.SOUTH, 1, 0);
+		g.rotateShipAntiClockwise(g.submarine);
+		g.rotateShipAntiClockwise(g.submarine);
+		g.placeShip(g.carrier, Direction.WEST, 7, 7);
+		g.rotateShipClockwise(g.carrier);
+		g.showGrid();
 		
 		
 	}
@@ -45,6 +52,7 @@ public class Grid {
 		
 	}
 	
+	//Sets every cell to blank space
 	void setUp() {
 		
 		for (int i = 0; i < 8; i++) {
@@ -54,6 +62,7 @@ public class Grid {
 		}
 	}
 	
+	//Shows grid with battleships visible
 	void showGrid() {
 		
 		System.out.println();
@@ -83,6 +92,7 @@ public class Grid {
 		
 	}
 	
+	//Show grid without battleships visible
 	void showOpponentView() {
 		
 		System.out.println();
@@ -109,7 +119,6 @@ public class Grid {
             
         }
 
-        //Last section of Ocean Map
         System.out.print("  ");
         for(int i = 0; i < 8; i++)
             System.out.print(i + " ");
@@ -117,8 +126,13 @@ public class Grid {
 		
 	}
 		
-	
+	//Place ship in a direction around a coordinate 
 	void placeShip(Ship ship, Direction direction, int x, int y) {
+		
+		if (ship.placed) {
+			System.out.println("Ship already placed");
+			return;
+		}
 		
 		int xStart = x;
 		int yStart = y;
@@ -158,8 +172,7 @@ public class Grid {
 			return;
 		}
 		 
-		ship.x = x;
-		ship.y = y;
+		ship.setCoordinates(x,y);
 		ship.direction = direction;
 		ship.placed = true;
 		
@@ -169,6 +182,7 @@ public class Grid {
 		
 	}
 	
+	//Remove ship from grid
 	void removeShip(Ship ship) {
 		
 		for (int i = 0; i < grid.length; i++) {
@@ -187,6 +201,7 @@ public class Grid {
 		
 	}
 	
+	//Rotate ship clockwise
 	void rotateShipClockwise(Ship ship) {
 		
 		Direction current = ship.direction;
@@ -213,6 +228,7 @@ public class Grid {
 		
 	}
 	
+	//Rotate ship anti clockwise
 	void rotateShipAntiClockwise (Ship ship) {
 		
 		Direction current = ship.direction;
@@ -239,6 +255,7 @@ public class Grid {
 		
 	}
 	
+	//Return true if coordinates hit ship and replaces cell with ship's hit marker
 	boolean hit(int x, int y) {
 		
 		if (grid[x][y].equals(" ")) {
@@ -260,6 +277,7 @@ public class Grid {
 		return true;
 	}
 	
+	//Returns true if a ship is destroyed
 	boolean isDestroyed(Ship ship) {
 		
 		int xStart = ship.x;
@@ -305,6 +323,7 @@ public class Grid {
 		
 	}
 	
+	//If all ships destroyed return true
 	boolean checkLost() {
 		
 		if (shipsDestroyed == 5) {
@@ -322,12 +341,4 @@ public class Grid {
 		
 	}
 	
-	boolean isEmpty(String cell) {
-		
-		if (cell != " ") {
-			return false;
-		}
-		return true;
-		
-	}
 }

@@ -10,37 +10,10 @@ public class Destroyer extends Ship {
 		
 		
 	}
-	public void rotateClockwise() {
 	
+	public String toString() {
 		
-	}
-	
-	public void rotateAntiClockwise() {
-		
-		
-	}
-	
-	public void setCoordinates(int x, int y) {
-		
-		
-		
-	}
-	
-	public boolean isHit(int x, int y) {
-		
-		return false;
-	}
-	
-	public boolean isDestoryed() {
-		
-		return false;
-	}
-	
-	
-	private void toNorth() {
-		
-		
-		
+		return "destroyer";
 	}
 	
 	
