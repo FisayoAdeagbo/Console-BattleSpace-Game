@@ -17,16 +17,6 @@ public class Grid {
 	
 	public static void main(String[] args) {
 		
-		Grid nGrid = new Grid();
-		nGrid.placeShip(nGrid.submarine, Direction.EAST, 3, 3);
-		nGrid.placeShip(nGrid.destroyer, Direction.SOUTH, 4,4);
-		nGrid.placeShip(nGrid.carrier, Direction.WEST, 4, 4);
-		nGrid.placeShip(nGrid.cruiser, Direction.NORTH, 7, 1);
-		nGrid.placeShip(nGrid.battleship, Direction.EAST, 2, 2);
-		nGrid.rotateShipClockwise(nGrid.carrier);
-		nGrid.hit(3,3);
-		nGrid.showGrid();
-		System.out.println(nGrid.placedShips);
 		
 	}
 	
@@ -86,6 +76,39 @@ public class Grid {
             
         }
 
+        System.out.print("  ");
+        for(int i = 0; i < 8; i++)
+            System.out.print(i + " ");
+        System.out.println();
+		
+	}
+	
+	void showOpponentView() {
+		
+		System.out.println();
+        System.out.print("  ");
+        for(int i = 0; i < 8; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+
+        for(int x = 0; x < grid.length; x++) {
+            System.out.print(x + "|");
+
+            for (int y = 0; y < grid[x].length; y++) {
+            	if (grid[x][y].equals("O") || grid[x][y].equals(" ") || grid[x][y].equals("X")) {
+            		System.out.print(grid[x][y] + "|");
+            	} else {
+            		System.out.print(" " + "|");
+            	}
+            }
+
+            System.out.println(x);
+            System.out.println();
+            
+            
+        }
+
         //Last section of Ocean Map
         System.out.print("  ");
         for(int i = 0; i < 8; i++)
@@ -93,6 +116,7 @@ public class Grid {
         System.out.println();
 		
 	}
+		
 	
 	void placeShip(Ship ship, Direction direction, int x, int y) {
 		
@@ -123,7 +147,7 @@ public class Grid {
 					} else {
 						removeShip(ship);
 						System.out.println("Overlap");
-						break;
+						return;
 					}
 
 				}	
@@ -159,64 +183,66 @@ public class Grid {
 		if (!nonPlacedShips.contains(ship)) {
 			nonPlacedShips.add(ship);
 		}
+		ship.placed = false;
 		
 	}
 	
 	void rotateShipClockwise(Ship ship) {
 		
-		try {
-			if (ship.direction.equals(Direction.NORTH)) {
-				removeShip(ship);
-				placeShip(ship, Direction.EAST, ship.x, ship.y);
+		Direction current = ship.direction;
+		removeShip(ship);
+		
+		if (ship.direction.equals(Direction.NORTH)) {
+			placeShip(ship, Direction.EAST, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.SOUTH)) {
-				removeShip(ship);
-				placeShip(ship, Direction.WEST, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.SOUTH)) {
+			placeShip(ship, Direction.WEST, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.EAST)) {
-				removeShip(ship);
-				placeShip(ship, Direction.SOUTH, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.EAST)) {
+			placeShip(ship, Direction.SOUTH, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.WEST)) {
-				removeShip(ship);
-				placeShip(ship, Direction.NORTH, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.WEST)) {
+			placeShip(ship, Direction.NORTH, ship.x, ship.y);
 				
-			}
-		} catch (Exception e) {
-			System.out.println("Cannot rotate ship" + e);
 		}
+		
+		if (!ship.placed) {
+			placeShip(ship, current, ship.x, ship.y);
+		}
+		
 		
 	}
 	
 	void rotateShipAntiClockwise (Ship ship) {
 		
-		try {
-			if (ship.direction.equals(Direction.NORTH)) {
-				removeShip(ship);
-				placeShip(ship, Direction.WEST, ship.x, ship.y);
+		Direction current = ship.direction;
+		removeShip(ship);
+		
+		if (ship.direction.equals(Direction.NORTH)) {
+			placeShip(ship, Direction.WEST, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.SOUTH)) {
-				removeShip(ship);
-				placeShip(ship, Direction.EAST, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.SOUTH)) {
+			placeShip(ship, Direction.EAST, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.EAST)) {
-				removeShip(ship);
-				placeShip(ship, Direction.NORTH, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.EAST)) {
+			placeShip(ship, Direction.NORTH, ship.x, ship.y);
 				
-			} else if (ship.direction.equals(Direction.WEST)) {
-				removeShip(ship);
-				placeShip(ship, Direction.SOUTH, ship.x, ship.y);
+		} else if (ship.direction.equals(Direction.WEST)) {
+			placeShip(ship, Direction.SOUTH, ship.x, ship.y);
 				
-			}
-		} catch (Exception e) {
-			System.out.println("Cannot rotate ship" + e);
 		}
+		
+		if (!ship.placed) {
+			placeShip(ship, current, ship.x, ship.y);
+		}
+
 		
 	}
 	
 	boolean hit(int x, int y) {
 		
 		if (grid[x][y].equals(" ")) {
+			grid[x][y] = "O";
 			return false;
 		
 		} else if (grid[x][y].equals("C")) {
@@ -230,6 +256,7 @@ public class Grid {
 		} else if (grid[x][y].equals("D")) {
 			grid[x][y] = destroyer.hitMarker;	
 		}
+		
 		return true;
 	}
 	
